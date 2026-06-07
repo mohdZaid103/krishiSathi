@@ -6,7 +6,8 @@ import {
   addToCart,
   getCart,
   removeFromCart,
-  decreaseQuantity
+  decreaseQuantity,
+  getCartCount
 } from "../controllers/cart.controller.js";
 
 
@@ -17,7 +18,11 @@ router.patch(
   decreaseQuantity
 );
 router.post("/add", auth, addToCart);
-
+router.get(
+  "/count",
+  auth,
+  getCartCount
+);
 router.get("/", auth, getCart);
 router.delete("/remove", auth, removeFromCart);
 

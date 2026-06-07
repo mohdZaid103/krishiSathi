@@ -1,63 +1,72 @@
+
+
 import Product from "../models/Product.model.js";
 import { analyzePlantDisease } from "../services/geminiService.js";
-
-export const detectDisease = async (
-  req,
-  res
-) => {
+import Detection from "../models/Detection.model.js";
+export const detectDisease = async (req, res) => {
   try {
+
+    console.log("REQ USER:", req.user);
+
     const result =
       await analyzePlantDisease(req.file.path);
-        
+    console.log("USER ID TO SAVE:", req.user.userId);
+    await Detection.create({
+      userId: req.user.userId,
+      disease: result.disease,
+      severity: result.severity,
+      symptoms: result.symptoms,
+      treatment: result.treatment,
+      recommendedProducts:
+        result.recommendedProducts,
+    });
+
     const recommendedProducts =
       result.recommendedProducts || [];
 
     const keywords = [];
 
-recommendedProducts.forEach((item) => {
-  const words = item
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, "")
-    .split(" ");
+    recommendedProducts.forEach((item) => {
+      const words = item
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, "")
+        .split(" ");
 
-  words.forEach((word) => {
-    if (word.length > 3) {
-      keywords.push(word);
-    }
-  });
-});
+      words.forEach((word) => {
+        if (word.length > 3) {
+          keywords.push(word);
+        }
+      });
+    });
 
-console.log("Keywords:", keywords);
+    const matchedProducts = await Product.find({
+      $or: [
+        {
+          name: {
+            $regex: keywords.join("|"),
+            $options: "i",
+          },
+        },
+        {
+          category: {
+            $regex: keywords.join("|"),
+            $options: "i",
+          },
+        },
+        {
+          description: {
+            $regex: keywords.join("|"),
+            $options: "i",
+          },
+        },
+      ],
+    });
 
-const matchedProducts = await Product.find({
-  $or: [
-    {
-      name: {
-        $regex: keywords.join("|"),
-        $options: "i",
-      },
-    },
-    {
-      category: {
-        $regex: keywords.join("|"),
-        $options: "i",
-      },
-    },
-    {
-      description: {
-        $regex: keywords.join("|"),
-        $options: "i",
-      },
-    },
-  ],
-});
-console.log("Recommended Products:", recommendedProducts);
-console.log("Keywords:", keywords);
-console.log("Matched Products:", matchedProducts);
     res.json({
       ...result,
       products: matchedProducts,
     });
+
   } catch (error) {
     console.error(error);
 

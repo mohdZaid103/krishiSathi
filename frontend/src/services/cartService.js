@@ -69,3 +69,23 @@ export const decreaseQuantity = async (
 
   return response.data;
 };
+
+export const getCartCount =
+  async () => {
+
+    const token =
+      localStorage.getItem("token");
+
+    const response =
+      await axios.get(
+        "http://localhost:5000/api/cart/count",
+        {
+          headers: {
+            Authorization:
+              `Bearer ${token}`,
+          },
+        }
+      );
+
+    return response.data;
+};

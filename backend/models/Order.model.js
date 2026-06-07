@@ -28,10 +28,18 @@ const orderSchema = new mongoose.Schema(
       type: String,
       default: "Pending",
     },
+    shippingAddress: {
+      fullName: String,
+      phone: String,
+      addressLine1: String,
+      city: String,
+      state: String,
+      pincode: String,
+    },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export default mongoose.model("Order", orderSchema);

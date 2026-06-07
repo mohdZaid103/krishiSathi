@@ -133,3 +133,39 @@ export const decreaseQuantity = async (req, res) => {
     });
   }
 };
+export const getCartCount = async (
+  req,
+  res
+) => {
+  try {
+
+    const cart = await Cart.findOne({
+      userId: req.user.userId,
+    });
+
+    if (!cart) {
+      return res.json({
+        count: 0,
+      });
+    }
+
+    const count = cart.items.reduce(
+      (sum, item) =>
+        sum + item.quantity,
+      0
+    );
+
+    res.json({
+      count,
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      message:
+        "Failed to fetch count",
+    });
+  }
+};

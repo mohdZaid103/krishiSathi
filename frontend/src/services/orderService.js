@@ -32,3 +32,23 @@ export const getMyOrders = async () => {
 
   return response.data;
 };
+
+export const getOrderById =
+  async (id) => {
+
+    const token =
+      localStorage.getItem("token");
+
+    const response =
+      await axios.get(
+        `http://localhost:5000/api/orders/${id}`,
+        {
+          headers: {
+            Authorization:
+              `Bearer ${token}`,
+          },
+        }
+      );
+
+    return response.data;
+};

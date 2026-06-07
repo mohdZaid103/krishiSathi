@@ -1,0 +1,45 @@
+import axios from "axios";
+
+const API =
+  "http://localhost:5000/api/orders";
+
+export const createPaymentOrder =
+  async () => {
+
+    const token =
+      localStorage.getItem("token");
+
+    const response =
+      await axios.post(
+        `${API}/create-payment-order`,
+        {},
+        {
+          headers: {
+            Authorization:
+              `Bearer ${token}`,
+          },
+        }
+      );
+
+    return response.data;
+};
+export const verifyPayment =
+  async (paymentData) => {
+
+    const token =
+      localStorage.getItem("token");
+
+    const response =
+      await axios.post(
+        "http://localhost:5000/api/orders/verify-payment",
+        paymentData,
+        {
+          headers: {
+            Authorization:
+              `Bearer ${token}`,
+          },
+        }
+      );
+
+    return response.data;
+};
