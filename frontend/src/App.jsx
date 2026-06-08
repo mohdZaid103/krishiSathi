@@ -10,12 +10,14 @@ import Profile from "./pages/Profile";
 import Home from "./pages/Home";
 import OrderDetails from "./pages/OrderDetails";
 import { CartProvider } from "./context/CartContext";
+import SellerDashboard from "./pages/SellerDashboard";
+import AddProduct from "./pages/AddProduct";
+
 function App() {
   return (
     <CartProvider>
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/products" element={<Products />} />
       <Route path="/login" element={<Login />} />
       <Route path="/products" element={<Products />} />
       <Route path="/cart" element={<Cart />} />
@@ -25,6 +27,15 @@ function App() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/orders/:id" element={<OrderDetails />} />
+      <Route
+  path="/seller"
+  element={<SellerDashboard />}
+/>
+
+<Route
+  path="/seller/add-product"
+  element={<AddProduct />}
+/>
     </Routes>
   </CartProvider>
   );

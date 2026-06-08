@@ -31,19 +31,11 @@ function Navbar() {
 
   const isActive = (path) => location.pathname === path;
 
-  useEffect(() => {
-    const loadCartCount = async () => {
-      try {
-        if (!user) return;
-        const data = await getCartCount();
-        setCartCount(data.count);
-      } catch (error) {
-        console.error("Failed to load navbar cart counters:", error);
-      }
-    };
-
-    loadCartCount();
-  }, [user]);
+  {cartCount > 0 && (
+  <span>
+    {cartCount}
+  </span>
+)}
 
   useEffect(() => {
     const handleClickOutside = (event) => {

@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.model.js";
 
 export const googleLogin = async (req,res)=>{
+    console.log("GOOGLE LOGIN HIT");
     try{
         const {idToken} = req.body;
 
@@ -22,7 +23,11 @@ export const googleLogin = async (req,res)=>{
                 photo: picture,
             });
         }
-
+console.log("===========");
+console.log("EMAIL:", email);
+console.log("USER:", user);
+console.log("ROLE:", user?.role);
+console.log("===========");
         const token = jwt.sign(
             { userId: user._id,
                 role: user.role,
