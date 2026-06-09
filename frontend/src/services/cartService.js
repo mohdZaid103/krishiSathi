@@ -1,8 +1,6 @@
 import axios from "axios";
 
-const API =
-  import.meta.env.VITE_SERVER_URL;
-
+const API = import.meta.env.VITE_SERVER_URL;
 const API_URL = `${API}/api/cart`;
 
 // 1. First isolated export function
@@ -27,7 +25,7 @@ export const getCart = async () => {
   const token = localStorage.getItem("token");
 
   const response = await axios.get(
-    API_URL, // Used the constant here for consistency
+    API_URL, 
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -41,8 +39,10 @@ export const getCart = async () => {
 export const removeFromCart = async (productId) => {
   const token = localStorage.getItem("token");
 
+  // FIX: Changed from `${API_URL}/api/cart/remove` to just `${API_URL}/remove`
+  // Otherwise, it translates to: http://.../api/cart/api/cart/remove
   const response = await axios.delete(
-    "http://localhost:5000/api/cart/remove",
+    `${API_URL}/remove`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -55,13 +55,13 @@ export const removeFromCart = async (productId) => {
 
   return response.data;
 };
-export const decreaseQuantity = async (
-  productId
-) => {
+
+export const decreaseQuantity = async (productId) => {
   const token = localStorage.getItem("token");
 
+  // FIX: Swapped hardcoded localhost with dynamic API_URL template string
   const response = await axios.patch(
-    "http://localhost:5000/api/cart/decrease",
+    `${API_URL}/decrease`,
     { productId },
     {
       headers: {
@@ -73,22 +73,18 @@ export const decreaseQuantity = async (
   return response.data;
 };
 
-export const getCartCount =
-  async () => {
+export const getCartCount = async () => {
+  const token = localStorage.getItem("token");
 
-    const token =
-      localStorage.getItem("token");
+  // FIX: Swapped hardcoded localhost with dynamic API_URL template string
+  const response = await axios.get(
+    `${API_URL}/count`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
-    const response =
-      await axios.get(
-        "http://localhost:5000/api/cart/count",
-        {
-          headers: {
-            Authorization:
-              `Bearer ${token}`,
-          },
-        }
-      );
-
-    return response.data;
+  return response.data;
 };
