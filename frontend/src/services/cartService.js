@@ -1,6 +1,9 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/cart";
+const API =
+  import.meta.env.VITE_SERVER_URL;
+
+const API_URL = `${API}/api/cart`;
 
 // 1. First isolated export function
 export const addToCart = async (productId) => {

@@ -1,6 +1,9 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/orders";
+const API =
+  import.meta.env.VITE_SERVER_URL;
+
+const API_URL = `${API}/api/orders`;
 
 export const placeOrder = async () => {
   const token = localStorage.getItem("token");

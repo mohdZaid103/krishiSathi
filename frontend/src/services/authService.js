@@ -6,6 +6,9 @@ import {
 import { auth } from "../firebase";
 import axios from "axios";
 
+const API =
+  import.meta.env.VITE_SERVER_URL;
+
 const provider = new GoogleAuthProvider();
 
 export const loginWithGoogle = async (role) => {
@@ -19,7 +22,7 @@ export const loginWithGoogle = async (role) => {
   const idToken = await firebaseUser.getIdToken();
 
   const response = await axios.post(
-    "http://localhost:5000/api/auth/google",
+    `${API}/api/auth/google`,
     {
       idToken,
       role,

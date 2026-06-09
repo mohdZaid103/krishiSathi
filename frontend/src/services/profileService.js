@@ -1,7 +1,10 @@
 import axios from "axios";
 
+const API =
+  import.meta.env.VITE_SERVER_URL;
+
 const API_URL =
-  "http://localhost:5000/api/profile";
+  `${API}/api/profile`;
 
 export const getProfile =
   async () => {
