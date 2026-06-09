@@ -173,15 +173,21 @@ Track Revenue
 Add screenshots for:
 
 * Home Page
+<img width="1776" height="897" alt="image" src="https://github.com/user-attachments/assets/99526054-84cd-4bc4-b91b-6b6a76bbe103" />
 
 * Disease Detection
-* Products Page
-* Cart
-* Order Details
-* Seller Dashboard
-* Seller Orders
-* Revenue Analytics
+* <img width="1796" height="880" alt="image" src="https://github.com/user-attachments/assets/9809c9e8-24a5-4da8-b8ff-6e4864e8cd1d" />
 
+* Products Page
+* <img width="1740" height="858" alt="image" src="https://github.com/user-attachments/assets/ca3b7a1c-8a92-4966-a493-3583f5566e84" />
+
+* Cart
+* <img width="1368" height="853" alt="image" src="https://github.com/user-attachments/assets/f71dcdfe-e477-4f0f-85f2-c57f1fb2d7a2" />
+* Seller Dashboard
+* <img width="1594" height="851" alt="image" src="https://github.com/user-attachments/assets/b1399ee2-fb6a-4f9c-9487-c1996cae1b8e" />
+
+* Seller Orders
+* <img width="1172" height="638" alt="image" src="https://github.com/user-attachments/assets/206103f2-60fb-4752-95d2-1a5a9cbc945f" />
 ---
 
 ## Owner
