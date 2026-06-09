@@ -1,18 +1,24 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { UploadCloud, FileImage, Sparkles, AlertTriangle, CheckCircle, ShoppingCart, Loader2 } from "lucide-react";
+
+import {
+  UploadCloud,
+  FileImage,
+  Sparkles,
+  AlertTriangle,
+  CheckCircle,
+  ShoppingCart,
+  Loader2,
+} from "lucide-react";
 import MainLayout from "../layouts/MainLayout";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { addToCart } from "../services/cartService.js";
-import {
-  useCart,
-} from "../context/CartContext";
+import { useCart } from "../context/CartContext";
+
 
 function DetectDisease() {
-    const {
-  refreshCartCount,
-} = useCart();
+  const { refreshCartCount } = useCart();
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -20,6 +26,7 @@ function DetectDisease() {
   const [addingCartId, setAddingCartId] = useState(null);
   const fileInputRef = useRef(null);
 
+  const SERVER_URL = import.meta.env.VITE_SERVER_URL;
   const handleFileChange = (file) => {
     if (file && file.type.startsWith("image/")) {
       setImage(file);
@@ -42,14 +49,15 @@ function DetectDisease() {
       formData.append("image", image);
 
       const token = localStorage.getItem("token");
+
       const response = await axios.post(
-        "http://localhost:5000/api/disease/detect",
+        `${SERVER_URL}/api/disease/detect`,
         formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       setResult(response.data);
@@ -90,14 +98,14 @@ function DetectDisease() {
     <MainLayout>
       <div className="bg-zinc-50/50 min-h-screen py-12">
         <div className="max-w-4xl mx-auto px-6">
-          
           {/* Title Header Section */}
           <div className="mb-10 text-center sm:text-left">
             <h1 className="text-4xl font-black text-zinc-900 tracking-tight">
               AI Plant Health Diagnostics
             </h1>
             <p className="text-zinc-500 font-medium mt-1">
-              Upload a snapshot of your crop foliage to instantly map crop diseases using Gemini Vision AI.
+              Upload a snapshot of your crop foliage to instantly map crop
+              diseases using Gemini Vision AI.
             </p>
           </div>
 
@@ -111,7 +119,7 @@ function DetectDisease() {
               onChange={(e) => handleFileChange(e.target.files[0])}
             />
 
-            <div 
+            <div
               onClick={() => fileInputRef.current.click()}
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => {
@@ -122,14 +130,22 @@ function DetectDisease() {
             >
               {imagePreview ? (
                 <div className="relative w-full max-w-sm rounded-xl overflow-hidden shadow-inner bg-zinc-900 flex items-center justify-center aspect-video">
-                  <img src={imagePreview} alt="Crop Leaf Preview" className="w-full h-full object-cover" />
-                  
+                  <img
+                    src={imagePreview}
+                    alt="Crop Leaf Preview"
+                    className="w-full h-full object-cover"
+                  />
+
                   {/* Premium Gemini Laser Scan Animation Effect Bar */}
                   {loading && (
-                    <motion.div 
+                    <motion.div
                       initial={{ top: "0%" }}
                       animate={{ top: "100%" }}
-                      transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                      transition={{
+                        repeat: Infinity,
+                        duration: 2,
+                        ease: "linear",
+                      }}
                       className="absolute left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-green-400 to-transparent shadow-lg shadow-green-400 z-10"
                     />
                   )}
@@ -139,8 +155,12 @@ function DetectDisease() {
                   <div className="w-14 h-14 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                     <UploadCloud className="w-6 h-6" />
                   </div>
-                  <p className="font-bold text-zinc-800 text-center">Drag and drop your crop leaf image here</p>
-                  <p className="text-xs text-zinc-400 mt-1">Supports PNG, JPG or JPEG formatting files</p>
+                  <p className="font-bold text-zinc-800 text-center">
+                    Drag and drop your crop leaf image here
+                  </p>
+                  <p className="text-xs text-zinc-400 mt-1">
+                    Supports PNG, JPG or JPEG formatting files
+                  </p>
                   <button className="mt-4 text-xs font-bold text-green-700 bg-green-50 border border-green-200/40 px-4 py-2 rounded-xl group-hover:bg-green-600 group-hover:text-white transition-colors">
                     Browse Files
                   </button>
@@ -157,11 +177,13 @@ function DetectDisease() {
               >
                 {loading ? (
                   <>
-                    <Loader2 className="w-5 h-5 animate-spin" /> Deep Engine Analysis...
+                    <Loader2 className="w-5 h-5 animate-spin" /> Deep Engine
+                    Analysis...
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-5 h-5 text-yellow-400 fill-yellow-400" /> Run Diagnostics
+                    <Sparkles className="w-5 h-5 text-yellow-400 fill-yellow-400" />{" "}
+                    Run Diagnostics
                   </>
                 )}
               </button>
@@ -171,7 +193,7 @@ function DetectDisease() {
           {/* AI Output Generation Section Block */}
           <AnimatePresence>
             {result && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
@@ -180,19 +202,25 @@ function DetectDisease() {
                 {/* Core Diagnostics Base Overview Data Block */}
                 <div className="bg-white border border-zinc-200/80 rounded-3xl p-6 shadow-sm">
                   <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-green-700 mb-4">
-                    <Sparkles className="w-4 h-4 fill-green-700" /> Diagnosis Complete
+                    <Sparkles className="w-4 h-4 fill-green-700" /> Diagnosis
+                    Complete
                   </div>
 
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-zinc-100">
                     <div>
-                      <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Identified Condition</span>
+                      <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">
+                        Identified Condition
+                      </span>
                       <h2 className="text-2xl font-black text-zinc-800 tracking-tight mt-0.5">
                         🌱 {result.disease}
                       </h2>
                     </div>
 
-                    <div className={`inline-flex items-center gap-1.5 px-4 py-1.5 border rounded-full text-sm font-bold self-start sm:self-auto ${getSeverityStyles(result.severity)}`}>
-                      <AlertTriangle className="w-4 h-4" /> Severity: {result.severity}
+                    <div
+                      className={`inline-flex items-center gap-1.5 px-4 py-1.5 border rounded-full text-sm font-bold self-start sm:self-auto ${getSeverityStyles(result.severity)}`}
+                    >
+                      <AlertTriangle className="w-4 h-4" /> Severity:{" "}
+                      {result.severity}
                     </div>
                   </div>
 
@@ -200,11 +228,15 @@ function DetectDisease() {
                   <div className="grid md:grid-cols-2 gap-8 mt-6">
                     <div>
                       <h3 className="font-bold text-zinc-800 text-base mb-3 flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-600" /> Observed Symptoms
+                        <CheckCircle className="w-4 h-4 text-green-600" />{" "}
+                        Observed Symptoms
                       </h3>
                       <ul className="space-y-2">
                         {result.symptoms?.map((symptom, index) => (
-                          <li key={index} className="text-sm text-zinc-600 bg-zinc-50/60 border border-zinc-100 px-3 py-2.5 rounded-xl flex items-start gap-2.5">
+                          <li
+                            key={index}
+                            className="text-sm text-zinc-600 bg-zinc-50/60 border border-zinc-100 px-3 py-2.5 rounded-xl flex items-start gap-2.5"
+                          >
                             <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 mt-1.5 flex-shrink-0" />
                             <span>{symptom}</span>
                           </li>
@@ -214,7 +246,8 @@ function DetectDisease() {
 
                     <div>
                       <h3 className="font-bold text-zinc-800 text-base mb-3 flex items-center gap-2">
-                        <Sparkles className="w-4 h-4 text-yellow-500 fill-yellow-500" /> AI Treatment Plan
+                        <Sparkles className="w-4 h-4 text-yellow-500 fill-yellow-500" />{" "}
+                        AI Treatment Plan
                       </h3>
                       <div className="text-sm text-zinc-600 leading-relaxed bg-green-50/30 border border-green-600/10 p-4 rounded-xl">
                         {result.treatment}
@@ -227,9 +260,10 @@ function DetectDisease() {
                 {result.products && result.products.length > 0 && (
                   <div>
                     <h3 className="text-xl font-bold text-zinc-800 tracking-tight mb-4 flex items-center gap-2">
-                      <ShoppingCart className="w-5 h-5 text-green-600" /> Automated Product Interventions
+                      <ShoppingCart className="w-5 h-5 text-green-600" />{" "}
+                      Automated Product Interventions
                     </h3>
-                    
+
                     <div className="grid sm:grid-cols-2 gap-4">
                       {result.products.map((product) => (
                         <div
@@ -245,7 +279,10 @@ function DetectDisease() {
                                 {product.category}
                               </span>
                             </div>
-                            <p className="text-xs text-zinc-400 mt-1">Matched treatment item for targeting {result.disease}.</p>
+                            <p className="text-xs text-zinc-400 mt-1">
+                              Matched treatment item for targeting{" "}
+                              {result.disease}.
+                            </p>
                           </div>
 
                           <div className="flex items-center justify-between gap-4 mt-6 border-t border-zinc-100 pt-3">
@@ -262,7 +299,8 @@ function DetectDisease() {
                                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
                               ) : (
                                 <>
-                                  <ShoppingCart className="w-3.5 h-3.5" /> Add to Cart
+                                  <ShoppingCart className="w-3.5 h-3.5" /> Add
+                                  to Cart
                                 </>
                               )}
                             </button>
@@ -275,7 +313,6 @@ function DetectDisease() {
               </motion.div>
             )}
           </AnimatePresence>
-
         </div>
       </div>
     </MainLayout>
