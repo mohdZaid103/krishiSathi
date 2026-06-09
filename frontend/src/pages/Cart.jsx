@@ -23,6 +23,7 @@ import {
   decreaseQuantity,
 } from "../services/cartService";
 import { useCart } from "../context/CartContext";
+import toast from "react-hot-toast";
 function Cart() {
   const { refreshCartCount } = useCart();
   const [cart, setCart] = useState(null);
@@ -60,7 +61,7 @@ function Cart() {
   !address.state ||
   !address.pincode
 ) {
-  alert(
+  toast.success(
     "Please fill shipping address"
   );
   return;
@@ -93,7 +94,7 @@ function Cart() {
 });
           await refreshCartCount();
 
-          alert("Order placed successfully!");
+          toast.success("Order placed successfully!");
 
           await loadCart();
         },
@@ -109,7 +110,7 @@ function Cart() {
     } catch (error) {
       console.error(error);
 
-      alert("Failed to start payment");
+      toast.success("Failed to start payment");
     } finally {
       setCheckoutLoading(false);
     }

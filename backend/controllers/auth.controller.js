@@ -5,8 +5,10 @@ import User from "../models/User.model.js";
 export const googleLogin = async (req,res)=>{
     console.log("GOOGLE LOGIN HIT");
     try{
-        const {idToken} = req.body;
-
+const {
+  idToken,
+  role,
+} = req.body;
         if(!idToken){
             return res.status(400).json({message:"ID token is required"});
         }
@@ -16,18 +18,19 @@ export const googleLogin = async (req,res)=>{
 
         let user = await User.findOne({ email });
 
-        if (!user) {
-            user = await User.create({
-                name,
-                email,
-                photo: picture,
-            });
-        }
-console.log("===========");
-console.log("EMAIL:", email);
-console.log("USER:", user);
-console.log("ROLE:", user?.role);
-console.log("===========");
+       if (!user) {
+
+  user =
+    await User.create({
+      name,
+      email,
+      photo: picture,
+
+      role:
+        role || "farmer",
+    });
+
+}
         const token = jwt.sign(
             { userId: user._id,
                 role: user.role,

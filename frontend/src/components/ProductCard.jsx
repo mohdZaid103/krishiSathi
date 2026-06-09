@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ShoppingCart, Star, Check, Loader2 } from "lucide-react";
 import { addToCart } from "../services/cartService";
+import toast from "react-hot-toast";
 import {
   useCart,
 } from "../context/CartContext";
@@ -31,7 +32,7 @@ function ProductCard({ product }) {
     } catch (error) {
       console.error(error);
       // Optional: Replace this with a toast notification context call if you build one later
-      alert("Failed to add product to cart");
+      toast.success("Failed to add product to cart");
     } finally {
       setIsAdding(false);
     }

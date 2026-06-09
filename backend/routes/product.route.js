@@ -6,6 +6,8 @@ import {
   createProduct,
   getMyProducts,
   deleteProduct,
+  updateProduct,
+  getSellerProductById,
 } from "../controllers/product.controller.js";
 
 import auth from "../middlewares/auth.middleware.js";
@@ -31,7 +33,7 @@ router.get(
   "/my-products",
   auth,
   sellerOnly,
-  getMyProducts
+  getMyProducts,
 );
 
 router.delete(
@@ -39,6 +41,19 @@ router.delete(
   auth,
   sellerOnly,
   deleteProduct
+);
+router.put(
+  "/:id",
+  auth,
+  sellerOnly,
+  updateProduct
+);
+
+router.get(
+  "/seller-product/:id",
+  auth,
+  sellerOnly,
+  getSellerProductById
 );
 
 router.get("/:id", getProductById);

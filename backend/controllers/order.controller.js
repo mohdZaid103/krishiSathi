@@ -2,6 +2,7 @@ import Order from "../models/Order.model.js";
 import Cart from "../models/Cart.model.js";
 import razorpay from "../config/razorpay.js";
 import crypto from "crypto";
+import Product from '../models/Product.model.js';
 
 export const placeOrder = async (req, res) => {
   try {
@@ -245,3 +246,176 @@ export const createRazorpayOrder =
     });
   }
 };
+
+export const getSellerOrders =
+  async (req, res) => {
+
+    try {
+
+      const sellerId =
+        req.user.userId;
+
+      const orders =
+        await Order.find()
+          .populate("userId")
+          .populate(
+            "items.productId"
+          )
+          .sort({
+            createdAt: -1,
+          });
+
+      const sellerOrders =
+        orders.filter(
+          (order) =>
+            order.items.some(
+              (item) =>
+                item.productId
+                  ?.sellerId
+                  ?.toString() ===
+                sellerId
+            )
+        );
+
+      res.json(
+        sellerOrders
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        message:
+          "Failed to fetch seller orders",
+      });
+
+    }
+  };
+
+  export const updateOrderStatus =
+  async (req, res) => {
+
+    try {
+
+      const { status } =
+        req.body;
+
+      const order =
+        await Order.findByIdAndUpdate(
+          req.params.id,
+          {
+            status,
+          },
+          {
+            new: true,
+          }
+        );
+
+      if (!order) {
+        return res.status(404).json({
+          message:
+            "Order not found",
+        });
+      }
+
+      res.json(order);
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        message:
+          "Failed to update status",
+      });
+
+    }
+  };
+
+  export const getSellerAnalytics =
+  async (req, res) => {
+
+    try {
+
+      const sellerId =
+        req.user.userId;
+
+      const orders =
+        await Order.find()
+          .populate(
+            "items.productId"
+          );
+
+      let totalRevenue = 0;
+      let totalOrders = 0;
+
+      const productStats = {};
+
+      orders.forEach(
+        (order) => {
+
+          let sellerOrder =
+            false;
+
+          order.items.forEach(
+            (item) => {
+
+              if (
+                item.productId
+                  ?.sellerId
+                  ?.toString() ===
+                sellerId
+              ) {
+
+                sellerOrder =
+                  true;
+
+                totalRevenue +=
+                  item.productId.price *
+                  item.quantity;
+
+                if (
+                  !productStats[
+                    item.productId
+                      .name
+                  ]
+                ) {
+                  productStats[
+                    item.productId
+                      .name
+                  ] = 0;
+                }
+
+                productStats[
+                  item.productId
+                    .name
+                ] += item.quantity;
+              }
+            }
+          );
+
+          if (sellerOrder) {
+            totalOrders++;
+          }
+        }
+      );
+
+      res.json({
+        totalOrders,
+        totalRevenue,
+        topProducts:
+          productStats,
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        message:
+          "Failed to fetch analytics",
+      });
+
+    }
+  };

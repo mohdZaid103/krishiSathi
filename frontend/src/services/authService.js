@@ -8,7 +8,7 @@ import axios from "axios";
 
 const provider = new GoogleAuthProvider();
 
-export const loginWithGoogle = async () => {
+export const loginWithGoogle = async (role) => {
   const result = await signInWithPopup(
     auth,
     provider
@@ -22,6 +22,7 @@ export const loginWithGoogle = async () => {
     "http://localhost:5000/api/auth/google",
     {
       idToken,
+      role,
     }
   );
 

@@ -13,16 +13,12 @@ import {
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useEffect, useState, useRef } from "react";
-import {
-  useCart,
-} from "../context/CartContext";
+import { useCart } from "../context/CartContext";
 function Navbar() {
   const { user, logout } = useAuth();
   const location = useLocation();
 
-    const {
-  cartCount,
-} = useCart();
+  const { cartCount } = useCart();
   const [dashboardOpen, setDashboardOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
 
@@ -31,11 +27,9 @@ function Navbar() {
 
   const isActive = (path) => location.pathname === path;
 
-  {cartCount > 0 && (
-  <span>
-    {cartCount}
-  </span>
-)}
+  {
+    cartCount > 0 && <span>{cartCount}</span>;
+  }
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -113,6 +107,7 @@ function Navbar() {
             <BrainCircuit className="h-4 w-4" />
             AI Disease Diagnosis
           </Link>
+          
 
           {/* Dashboard Group Dropdown Menu Item */}
           {user && (
@@ -148,7 +143,15 @@ function Navbar() {
                     <LayoutDashboard className="w-4 h-4 opacity-80" />
                     Overview Center
                   </Link>
-
+                  {user?.role === "seller" && (
+                    <Link
+                      to="/seller"
+                      className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100"
+                    >
+                      <ShoppingBag className="w-4 h-4" />
+                      Seller Dashboard
+                    </Link>
+                  )}
                   <Link
                     to="/orders"
                     onClick={() => setDashboardOpen(false)}

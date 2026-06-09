@@ -140,3 +140,72 @@ async (req, res) => {
 
   }
 };
+
+export const updateProduct =
+  async (req, res) => {
+
+    try {
+
+      const product =
+        await Product.findOneAndUpdate(
+          {
+            _id: req.params.id,
+            sellerId:
+              req.user.userId,
+          },
+          req.body,
+          {
+            new: true,
+          }
+        );
+
+      if (!product) {
+        return res.status(404).json({
+          message:
+            "Product not found",
+        });
+      }
+
+      res.json(product);
+
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        message:
+          "Failed to update product",
+      });
+
+    }
+  };
+export const getSellerProductById =
+  async (req, res) => {
+
+    try {
+
+      const product =
+        await Product.findOne({
+          _id: req.params.id,
+          sellerId:
+            req.user.userId,
+        });
+
+      if (!product) {
+        return res.status(404).json({
+          message:
+            "Product not found",
+        });
+      }
+
+      res.json(product);
+
+    } catch (error) {
+
+      res.status(500).json({
+        message:
+          "Failed to fetch product",
+      });
+
+    }
+  };

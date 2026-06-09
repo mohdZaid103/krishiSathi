@@ -1,9 +1,10 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
-import { createProduct } from "../services/sellerService.js";
+import { getSellerProductById, updateProduct } from "../services/sellerService.js";
+import toast from "react-hot-toast";
 import { 
-  PlusCircle, 
+  Edit2, 
   ArrowLeft, 
   Tag, 
   IndianRupee, 
@@ -12,11 +13,13 @@ import {
   FileText, 
   Loader2 
 } from "lucide-react";
-import toast from "react-hot-toast";
 
-function AddProduct() {
+function EditProduct() {
+  const { id } = useParams();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -25,6 +28,30 @@ function AddProduct() {
     stock: "",
     image: "",
   });
+
+  useEffect(() => {
+    loadProduct();
+  }, [id]);
+
+  const loadProduct = async () => {
+    try {
+      setLoading(true);
+      const product = await getSellerProductById(id);
+
+      setFormData({
+        name: product.name || "",
+        description: product.description || "",
+        category: product.category || "",
+        price: product.price || "",
+        stock: product.stock || "",
+        image: product.image || "",
+      });
+    } catch (error) {
+      console.error("Failed to retrieve product details:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -39,61 +66,72 @@ function AddProduct() {
 
     try {
       setIsSubmitting(true);
-      await createProduct(formData);
+      await updateProduct(id, formData);
       navigate("/seller");
     } catch (error) {
-      console.error("Storefront insertion block exception:", error);
-      toast.success("Failed to register your product to the marketplace listing.");
+      console.error("Listing update failure:", error);
+      toast.success("Failed to sync listing updates to the storefront catalog.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  if (loading) {
+    return (
+      <MainLayout>
+        <div className="max-w-4xl mx-auto px-4 py-12 space-y-6">
+          <div className="h-6 bg-gray-100 rounded-lg w-1/4 animate-pulse"></div>
+          <div className="bg-white border border-gray-100 rounded-3xl p-8 h-96 anonymity animate-pulse"></div>
+        </div>
+      </MainLayout>
+    );
+  }
+
   return (
     <MainLayout>
       <div className="max-w-4xl mx-auto px-4 py-12 space-y-6">
         
-        {/* Breadcrumb Back Navigation */}
+        {/* Navigation Header Link */}
         <div>
           <Link
             to="/seller"
             className="inline-flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-emerald-700 transition-colors group"
           >
             <ArrowLeft className="w-4 h-4 transform transition-transform group-hover:-translate-x-1" />
-            Back to Dashboard
+            Cancel and Return
           </Link>
         </div>
 
-        {/* Core Form Card block */}
+        {/* Master Editing Card Layout */}
         <div className="bg-white border border-gray-100 rounded-3xl p-8 shadow-xl shadow-gray-950/[0.01]">
           
           <div className="mb-8 pb-4 border-b border-gray-50 flex items-center gap-3">
             <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl">
-              <PlusCircle className="w-6 h-6" />
+              <Edit2 className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="text-2xl font-black text-gray-900 tracking-tight">Add New Supply Product</h1>
-              <p className="text-gray-400 text-xs font-medium mt-0.5">List a crop item or farming compound tool onto the active farmer market catalog.</p>
+              <h1 className="text-2xl font-black text-gray-900 tracking-tight">Modify Inventory Listing</h1>
+              <p className="text-gray-400 text-xs font-medium mt-0.5">Revise parameters, change availability logs, or adjust catalog pricing.</p>
             </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             
-            {/* Product Title Name Field */}
+            {/* Product Title Label field */}
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block">Product Title</label>
               <input
                 required
                 name="name"
                 type="text"
-                placeholder="e.g., Syngenta Amistar Top Fungicide"
+                placeholder="Product Name"
                 value={formData.name}
                 onChange={handleChange}
                 className="w-full border border-gray-200/80 rounded-xl p-3.5 text-sm font-medium focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition"
               />
             </div>
 
-            {/* Categorization & Visual Field Setup Row */}
+            {/* Categorization Meta Configurations Section */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               
               <div className="space-y-1.5 md:col-span-1">
@@ -118,7 +156,7 @@ function AddProduct() {
                 </div>
               </div>
 
-              {/* Financial Price Evaluation Input Field */}
+              {/* Price Evaluation Field */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block">Retail Price (INR)</label>
                 <div className="relative">
@@ -127,7 +165,7 @@ function AddProduct() {
                     name="price"
                     type="number"
                     min="1"
-                    placeholder="750"
+                    placeholder="Price"
                     value={formData.price}
                     onChange={handleChange}
                     className="w-full border border-gray-200/80 rounded-xl py-3.5 pl-10 pr-4 text-sm font-bold tracking-tight text-gray-900 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition"
@@ -138,7 +176,7 @@ function AddProduct() {
                 </div>
               </div>
 
-              {/* Numeric Inventory Track Stock Input Field */}
+              {/* Stock Inventory Field */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block">Available Store Stock</label>
                 <div className="relative">
@@ -147,7 +185,7 @@ function AddProduct() {
                     name="stock"
                     type="number"
                     min="0"
-                    placeholder="45"
+                    placeholder="Stock"
                     value={formData.stock}
                     onChange={handleChange}
                     className="w-full border border-gray-200/80 rounded-xl py-3.5 pl-10 pr-4 text-sm font-semibold focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition"
@@ -160,7 +198,7 @@ function AddProduct() {
 
             </div>
 
-            {/* Description Textarea Field Setup */}
+            {/* Product Specifications Description Field block */}
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block">Item Specifications & Description</label>
               <div className="relative">
@@ -168,7 +206,7 @@ function AddProduct() {
                   required
                   name="description"
                   rows="4"
-                  placeholder="Provide precise usage instructions, target chemical formulas, crop compatibilities, and dosage constraints..."
+                  placeholder="Provide precise usage instructions..."
                   value={formData.description}
                   onChange={handleChange}
                   className="w-full border border-gray-200/80 rounded-xl py-3.5 pl-10 pr-4 text-sm font-medium leading-relaxed focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition"
@@ -179,7 +217,7 @@ function AddProduct() {
               </div>
             </div>
 
-            {/* Live Visual Image Asset URL Fields Group split layout */}
+            {/* Split Media Image Field with Live Rendering Feed Box */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-5 pt-2">
               
               <div className="space-y-1.5 md:col-span-3">
@@ -188,7 +226,7 @@ function AddProduct() {
                   <input
                     name="image"
                     type="url"
-                    placeholder="https://example.com/product-image.png"
+                    placeholder="Image URL"
                     value={formData.image}
                     onChange={handleChange}
                     className="w-full border border-gray-200/80 rounded-xl py-3.5 pl-10 pr-4 text-xs font-mono text-gray-600 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition"
@@ -199,26 +237,26 @@ function AddProduct() {
                 </div>
               </div>
 
-              {/* Dynamic Live Preview Frame */}
+              {/* Cover Feed Window view */}
               <div className="md:col-span-1 flex flex-col items-center justify-center">
-                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 block self-start">Live Capture View</span>
+                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 block self-start">Active Thumbnail</span>
                 <div className="w-full h-[52px] border border-dashed border-gray-200 rounded-xl bg-gray-50 overflow-hidden flex items-center justify-center text-gray-300">
                   {formData.image ? (
                     <img 
                       src={formData.image} 
-                      alt="Thumbnail Preview Feed" 
+                      alt="Thumbnail Snapshot" 
                       className="w-full h-full object-cover"
                       onError={(e) => { e.target.style.display = 'none'; }}
                     />
                   ) : (
-                    <span className="text-[10px] font-bold text-gray-400">No Image Link</span>
+                    <span className="text-[10px] font-bold text-gray-400">No Image File</span>
                   )}
                 </div>
               </div>
 
             </div>
 
-            {/* Submit Action CTA Footer Section */}
+            {/* Form submission action controls strip */}
             <div className="pt-4">
               <button
                 disabled={isSubmitting}
@@ -228,12 +266,12 @@ function AddProduct() {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    Synchronizing Storefront Catalog...
+                    Synchronizing Catalog Inventory...
                   </>
                 ) : (
                   <>
-                    <PlusCircle className="w-5 h-5" />
-                    Deploy Product to Marketplace
+                    <Edit2 className="w-4 h-4" />
+                    Commit Inventory Updates
                   </>
                 )}
               </button>
@@ -247,4 +285,4 @@ function AddProduct() {
   );
 }
 
-export default AddProduct;
+export default EditProduct;

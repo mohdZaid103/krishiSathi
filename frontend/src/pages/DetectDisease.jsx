@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { UploadCloud, FileImage, Sparkles, AlertTriangle, CheckCircle, ShoppingCart, Loader2 } from "lucide-react";
 import MainLayout from "../layouts/MainLayout";
 import axios from "axios";
+import toast from "react-hot-toast";
 import { addToCart } from "../services/cartService.js";
 import {
   useCart,
@@ -25,13 +26,13 @@ function DetectDisease() {
       setImagePreview(URL.createObjectURL(file));
       setResult(null); // Clear previous result on new selection
     } else {
-      alert("Please upload a valid image file.");
+      toast.success("Please upload a valid image file.");
     }
   };
 
   const handleAnalyze = async () => {
     if (!image) {
-      alert("Please select or drop an image first.");
+      toast.success("Please select or drop an image first.");
       return;
     }
 
@@ -54,7 +55,7 @@ function DetectDisease() {
       setResult(response.data);
     } catch (error) {
       console.error(error);
-      alert("Analysis failed. Please check your backend connection.");
+      toast.success("Analysis failed. Please check your backend connection.");
     } finally {
       setLoading(false);
     }
@@ -65,10 +66,10 @@ function DetectDisease() {
     try {
       await addToCart(productId);
       await refreshCartCount();
-      alert("Added to cart successfully!");
+      toast.success("Added to cart successfully!");
     } catch (error) {
       console.error(error);
-      alert("Failed to add to cart");
+      toast.success("Failed to add to cart");
     } finally {
       setAddingCartId(null);
     }

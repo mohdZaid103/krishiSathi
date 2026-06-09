@@ -3,22 +3,24 @@ import { motion } from "framer-motion";
 import { loginWithGoogle } from "../services/authService";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { Sparkles, Loader2 } from "lucide-react";
+import { Sparkles, Loader2, Tractor, Store } from "lucide-react";
+import toast from "react-hot-toast";
 
 function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [authLoading, setAuthLoading] = useState(false);
+  const [role, setRole] = useState("farmer");
 
   const handleLogin = async () => {
     try {
       setAuthLoading(true);
-      const data = await loginWithGoogle();
+      const data = await loginWithGoogle(role);
       login(data.user);
       navigate("/");
     } catch (error) {
       console.error("Authentication handshake error:", error);
-      alert("Google login failed. Please try again.");
+      toast.success("Google login failed. Please try again.");
     } finally {
       setAuthLoading(false);
     }
@@ -31,7 +33,6 @@ function Login() {
       <div 
         className="relative md:w-1/2 bg-zinc-950 flex flex-col justify-between p-8 md:p-12 text-white overflow-hidden min-h-[35vh] md:min-h-screen"
       >
-        {/* Background Image Overlay with Brand Green Tint Mapping */}
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-40 scale-105"
           style={{
@@ -40,7 +41,6 @@ function Login() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-green-950/90 via-zinc-950/80 to-zinc-950/40" />
 
-        {/* Brand Header Mark */}
         <div className="relative z-10 flex items-center gap-2">
           <div className="w-10 h-10 rounded-xl bg-green-600 flex items-center justify-center font-bold text-lg text-white shadow-md shadow-green-900/30">
             🌱
@@ -50,7 +50,6 @@ function Login() {
           </span>
         </div>
 
-        {/* Bottom Context Message */}
         <div className="relative z-10 mt-auto max-w-md">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -71,7 +70,7 @@ function Login() {
       </div>
 
       {/* Right Column: Interaction Authentication Interface Card */}
-      <div className="md:w-1/2 flex items-center justify-center p-8 bg-zinc-50 border-t md:border-t-0 md:border-l border-zinc-200/60">
+      <div className="md:w-1/2 flex items-center justify-center p-6 bg-zinc-50 border-t md:border-t-0 md:border-l border-zinc-200/60">
         <motion.div 
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -81,11 +80,62 @@ function Login() {
           {/* Header Typography Elements */}
           <div className="mb-8 text-center md:text-left">
             <h1 className="text-3xl font-black text-zinc-900 tracking-tight">
-              Farmer Login Portal
+              Portal Entrance
             </h1>
             <p className="text-sm text-zinc-400 font-medium mt-1">
-              Access your personalized agronomy control dashboard.
+              Select your system profile role to log in securely.
             </p>
+          </div>
+
+          {/* Premium Upgraded Role Selection Section */}
+          <div className="space-y-3 mb-6">
+            <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider block mb-1">
+              Identify Your Identity
+            </label>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* Farmer Selection Card */}
+              <button
+                type="button"
+                onClick={() => setRole("farmer")}
+                className={`flex items-start gap-3 p-4 rounded-2xl border text-left transition-all duration-300 focus:outline-none ${
+                  role === "farmer"
+                    ? "bg-emerald-50/70 text-emerald-900 border-emerald-500/50 shadow-sm ring-1 ring-emerald-500/20"
+                    : "bg-white text-zinc-600 border-zinc-100 hover:bg-zinc-50/50 hover:border-zinc-300"
+                }`}
+              >
+                <div className={`p-2 rounded-xl shrink-0 mt-0.5 ${
+                  role === "farmer" ? "bg-emerald-600 text-white" : "bg-zinc-100 text-zinc-500"
+                }`}>
+                  <Tractor className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="font-bold text-sm">Farmer</p>
+                  <p className="text-[11px] text-zinc-400 mt-0.5 font-medium leading-tight">Access AI diagnostics & buy supplies</p>
+                </div>
+              </button>
+
+              {/* Seller Selection Card */}
+              <button
+                type="button"
+                onClick={() => setRole("seller")}
+                className={`flex items-start gap-3 p-4 rounded-2xl border text-left transition-all duration-300 focus:outline-none ${
+                  role === "seller"
+                    ? "bg-emerald-50/70 text-emerald-900 border-emerald-500/50 shadow-sm ring-1 ring-emerald-500/20"
+                    : "bg-white text-zinc-600 border-zinc-100 hover:bg-zinc-50/50 hover:border-zinc-300"
+                }`}
+              >
+                <div className={`p-2 rounded-xl shrink-0 mt-0.5 ${
+                  role === "seller" ? "bg-emerald-600 text-white" : "bg-zinc-100 text-zinc-500"
+                }`}>
+                  <Store className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="font-bold text-sm">Seller</p>
+                  <p className="text-[11px] text-zinc-400 mt-0.5 font-medium leading-tight">Manage shop stock & supply inventories</p>
+                </div>
+              </button>
+            </div>
           </div>
 
           {/* Explicit OAuth Entry Trigger Button */}
@@ -95,7 +145,7 @@ function Login() {
             className="w-full group inline-flex items-center justify-center gap-3 bg-white hover:bg-zinc-50 border border-zinc-200 hover:border-zinc-300 text-zinc-700 font-bold py-4 px-6 rounded-2xl active:scale-[0.99] shadow-sm transition-all duration-200 disabled:bg-zinc-50 disabled:text-zinc-400"
           >
             {authLoading ? (
-              <Loader2 className="w-5 h-5 animate-spin text-green-600" />
+              <Loader2 className="w-5 h-5 animate-spin text-emerald-600" />
             ) : (
               <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
                 <path
@@ -120,7 +170,7 @@ function Login() {
                 />
               </svg>
             )}
-            <span>{authLoading ? "Verifying Credentials..." : "Continue with Google"}</span>
+            <span>{authLoading ? "Verifying Account..." : "Continue with Google"}</span>
           </button>
 
           {/* Privacy Footnote Agreement */}
