@@ -34,7 +34,7 @@ export const verifyPayment =
 
     const response =
       await axios.post(
-        "http://localhost:5000/api/orders/verify-payment",
+        `${API}/verify-payment`,
         paymentData,
         {
           headers: {

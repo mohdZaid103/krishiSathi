@@ -44,7 +44,7 @@ export const getOrderById =
 
     const response =
       await axios.get(
-        `http://localhost:5000/api/orders/${id}`,
+        `${API}/api/orders/${id}`,
         {
           headers: {
             Authorization:

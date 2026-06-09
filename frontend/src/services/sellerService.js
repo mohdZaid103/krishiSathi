@@ -75,7 +75,7 @@ export const deleteProduct =
 
     const response =
       await axios.get(
-        "http://localhost:5000/api/orders/seller",
+        `${API_url}/api/orders/seller`,
         {
           headers: {
             Authorization:
@@ -94,7 +94,7 @@ export const deleteProduct =
 
     const response =
       await axios.put(
-        `http://localhost:5000/api/orders/${id}/status`,
+        `${API_url}/api/orders/${id}/status`,
         { status },
         {
           headers: {
@@ -115,7 +115,7 @@ export const deleteProduct =
 
     const response =
       await axios.get(
-        "http://localhost:5000/api/orders/seller/analytics",
+        `${API_url}/api/orders/seller/analytics`,
         {
           headers: {
             Authorization:
