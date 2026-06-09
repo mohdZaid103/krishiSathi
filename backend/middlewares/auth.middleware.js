@@ -9,17 +9,11 @@ const auth = (req, res, next) => {
     const token =
       authHeader.split(" ")[1];
 
-    console.log("TOKEN:");
-    console.log(token);
-
     const decoded =
       jwt.verify(
         token,
         process.env.JWT_SECRET
       );
-
-    console.log("DECODED:");
-    console.log(decoded);
 
     req.user = decoded;
 

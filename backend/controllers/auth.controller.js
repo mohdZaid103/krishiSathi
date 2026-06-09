@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.model.js";
 
 export const googleLogin = async (req,res)=>{
-    console.log("GOOGLE LOGIN HIT");
     try{
 const {
   idToken,

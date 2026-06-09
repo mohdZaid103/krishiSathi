@@ -6,11 +6,9 @@ import Detection from "../models/Detection.model.js";
 export const detectDisease = async (req, res) => {
   try {
 
-    console.log("REQ USER:", req.user);
 
     const result =
       await analyzePlantDisease(req.file.path);
-    console.log("USER ID TO SAVE:", req.user.userId);
     await Detection.create({
       userId: req.user.userId,
       disease: result.disease,

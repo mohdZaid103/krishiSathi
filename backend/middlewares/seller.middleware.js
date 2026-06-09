@@ -4,8 +4,6 @@ const sellerOnly = (
   next
 ) => {
 
-  console.log("USER DATA:");
-  console.log(req.user);
 
   if (
     req.user.role !== "seller"
