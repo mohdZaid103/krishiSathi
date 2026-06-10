@@ -20,7 +20,7 @@ const detectionSchema = new mongoose.Schema(
     symptoms: [String],
 
     treatment: {
-      type: String,
+      type: [String],
     },
 
     recommendedProducts: [String],

@@ -15,7 +15,6 @@ import toast from "react-hot-toast";
 import { addToCart } from "../services/cartService.js";
 import { useCart } from "../context/CartContext";
 
-
 function DetectDisease() {
   const { refreshCartCount } = useCart();
   const [image, setImage] = useState(null);
@@ -176,13 +175,11 @@ function DetectDisease() {
               >
                 {loading ? (
                   <>
-                    <Loader2 className="w-5 h-5 animate-spin" /> Deep Engine
+                    <Loader2 className="w-5 h-5 animate-spin" /> Doing
                     Analysis...
                   </>
                 ) : (
-                  <>
-                    Run Diagnostics
-                  </>
+                  <>Run Diagnostics</>
                 )}
               </button>
             </div>
@@ -209,7 +206,7 @@ function DetectDisease() {
                         Identified Condition
                       </span>
                       <h2 className="text-2xl font-black text-zinc-800 tracking-tight mt-0.5">
-                        🌱 {result.disease}
+                         {result.disease}
                       </h2>
                     </div>
 
@@ -246,7 +243,11 @@ function DetectDisease() {
                         AI Treatment Plan
                       </h3>
                       <div className="text-sm text-zinc-600 leading-relaxed bg-green-50/30 border border-green-600/10 p-4 rounded-xl">
-                        {result.treatment}
+                        <ul className="space-y-2">
+                          {result.treatment?.map((item, index) => (
+                            <li key={index}>• {item}</li>
+                          ))}
+                        </ul>
                       </div>
                     </div>
                   </div>
