@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   UploadCloud,
   FileImage,
-  Sparkles,
   AlertTriangle,
   CheckCircle,
   ShoppingCart,
@@ -182,7 +181,6 @@ function DetectDisease() {
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-5 h-5 text-yellow-400 fill-yellow-400" />{" "}
                     Run Diagnostics
                   </>
                 )}
@@ -202,7 +200,6 @@ function DetectDisease() {
                 {/* Core Diagnostics Base Overview Data Block */}
                 <div className="bg-white border border-zinc-200/80 rounded-3xl p-6 shadow-sm">
                   <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-green-700 mb-4">
-                    <Sparkles className="w-4 h-4 fill-green-700" /> Diagnosis
                     Complete
                   </div>
 
@@ -246,7 +243,6 @@ function DetectDisease() {
 
                     <div>
                       <h3 className="font-bold text-zinc-800 text-base mb-3 flex items-center gap-2">
-                        <Sparkles className="w-4 h-4 text-yellow-500 fill-yellow-500" />{" "}
                         AI Treatment Plan
                       </h3>
                       <div className="text-sm text-zinc-600 leading-relaxed bg-green-50/30 border border-green-600/10 p-4 rounded-xl">

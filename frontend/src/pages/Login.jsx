@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { loginWithGoogle } from "../services/authService";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { Sparkles, Loader2, Tractor, Store } from "lucide-react";
+import {  Loader2, Tractor, Store } from "lucide-react";
 import toast from "react-hot-toast";
 
 function Login() {
@@ -57,7 +57,7 @@ function Login() {
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             <span className="inline-flex items-center gap-1 bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 px-3 py-1 rounded-full text-xs font-semibold mb-4 backdrop-blur-sm">
-              <Sparkles className="w-3 h-3 fill-yellow-300" /> Powered by Gemini Vision
+            Powered by Gemini Vision
             </span>
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight leading-tight">
               Smart Diagnostics <br />For Sustainable Yields.

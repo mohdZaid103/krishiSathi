@@ -198,7 +198,7 @@ function DetectionHistory() {
                             {/* Column 3: Recommended Marketplace Products */}
                             <div className="md:col-span-1">
                               <h3 className="font-bold text-zinc-800 text-sm tracking-wide uppercase flex items-center gap-1.5 mb-3 text-zinc-400">
-                                <Sparkles className="w-4 h-4 text-yellow-500 fill-yellow-500" /> Care Products
+                             Care Products
                               </h3>
                               {item.recommendedProducts && item.recommendedProducts.length > 0 ? (
                                 <ul className="space-y-1.5">
