@@ -206,7 +206,7 @@ function DetectDisease() {
                         Identified Condition
                       </span>
                       <h2 className="text-2xl font-black text-zinc-800 tracking-tight mt-0.5">
-                         {result.disease}
+                        {result.disease}
                       </h2>
                     </div>
 
@@ -244,7 +244,7 @@ function DetectDisease() {
                       </h3>
                       <div className="text-sm text-zinc-600 leading-relaxed bg-green-50/30 border border-green-600/10 p-4 rounded-xl">
                         <ul className="space-y-2">
-                          {result.treatment?.map((item, index) => (
+                          {(result.treatment || []).map((item, index) => (
                             <li key={index}>• {item}</li>
                           ))}
                         </ul>
