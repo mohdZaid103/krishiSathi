@@ -14,7 +14,9 @@ export const detectDisease = async (req, res) => {
       disease: result.disease,
       severity: result.severity,
       symptoms: result.symptoms,
-      treatment: result.treatment,
+      treatment: Array.isArray(result.treatment)
+      ? result.treatment
+      : [result.treatment],
       recommendedProducts:
         result.recommendedProducts,
     });

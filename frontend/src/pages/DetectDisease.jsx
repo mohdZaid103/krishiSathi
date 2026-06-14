@@ -244,7 +244,10 @@ function DetectDisease() {
                       </h3>
                       <div className="text-sm text-zinc-600 leading-relaxed bg-green-50/30 border border-green-600/10 p-4 rounded-xl">
                         <ul className="space-y-2">
-                          {(result.treatment || []).map((item, index) => (
+                          {(Array.isArray(result.treatment)
+                            ? result.treatment
+                            : [result.treatment]
+                          ).map((item, index) => (
                             <li key={index}>• {item}</li>
                           ))}
                         </ul>
