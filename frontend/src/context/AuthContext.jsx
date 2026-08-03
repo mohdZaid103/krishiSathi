@@ -1,10 +1,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
 
@@ -21,8 +21,8 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
-    
     setUser(null);
+    navigate("/login", { replace: true });
   };
 
   return (
